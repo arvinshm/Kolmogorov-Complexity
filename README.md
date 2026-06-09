@@ -1,13 +1,8 @@
 # Does rewarding brevity improve mathematical reasoning?
 
 A core feature of intelligence is compression: the ability to explain something
-with fewest bits of information. This experiment is designed to test whether 
-
-This folder is a clean replacement for the old sequence-DSL experiment. It is
-self-contained: after you inspect it, the rest of `Compression_and_math` can be
-deleted without breaking this experiment.
-
-The hypothesis is:
+with fewest bits of information. This experiment is designed to test a specific 
+hypothesis along these lines. The hypothesis is:
 
 > If a model is reinforced to solve math correctly with shorter generated
 > reasoning, does its held-out math benchmark performance improve in a
@@ -22,6 +17,14 @@ The design tests that hypothesis with two separate RL conditions:
 Both runs start from the same base model and train on the same RL environment.
 Both are evaluated on the same benchmark examples. The final comparison is
 paired, so each benchmark problem acts as its own control.
+
+
+The result (see below for detail) is that 
+
+
+
+
+
 
 ## Defaults
 
