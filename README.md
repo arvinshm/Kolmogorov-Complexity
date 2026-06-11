@@ -4,8 +4,8 @@ A core feature of intelligence is compression: the ability to explain something
 with fewest bits of information. This experiment is designed to test a specific 
 hypothesis along these lines. The hypothesis is:
 
-> If a model is reinforced to solve math correctly with shorter generated
-> reasoning, does its held-out math benchmark performance improve in a
+> If a model is reinforced to solve math correctly with a shorter chain
+> of though, does its (held-out) math benchmark performance improve in a
 > statistically significant way?
 
 The design tests that hypothesis with two separate RL conditions:
@@ -14,13 +14,21 @@ The design tests that hypothesis with two separate RL conditions:
 2. **Correctness + brevity RL:** reward correctness, and among correct answers
    add a tunable bonus for shorter generated reasoning.
 
-Both runs start from the same base model and train on the same RL environment.
-Both are evaluated on the same benchmark examples. The final comparison is
-paired, so each benchmark problem acts as its own control.
+More concretely, we will start with a Qwen model which is already good (~70%) on the 
+becnhmark (Math-500) if given enough reasoning tokens (max_tokens ~ 1500). 
+The RL environment (openai/gsm8k) is simple enough that GRPO does not really improve this
+benchmark that much. It pushes 70% to XXX. But now suppose, we change the evaluation of 
+the benchmark by limiting the number of reasoning tokens to XXX. As expected, performance of
+the base model on this constrained benchmark drops (to XXX). Now, we ask the question: can we teach the model brevity as well as correctness
+and see if this token-constrained bechmark improves? The answer is yes. We define two
+GRPO environments with different rewards. One where rewards is 1-0 if boxed answer is 
+correct-wrong. And the other, where correct answers get more rewarded if the are brief (see below for details).
+We find that the correctness-only RL barely improves the constrained benchmark (XXX->XXX).
+But, the brevity RL training meaningfully improves this performance (XXX->XXX).
 
-
-The result (see below for detail) is that 
-
+My interpretation of this result is that there is a correlation between brevity and reasnoning 
+ability. This matches the expectation that reanoning, quite generally, is correlated with finding
+short explanations of things, and perhaps can assist with model generalization.
 
 
 
@@ -32,7 +40,7 @@ The result (see below for detail) is that
 - RL environment: `openai/gsm8k`, config `main`, split `train`
 - Held-out benchmark: `HuggingFaceH4/MATH-500`, split `test`
 - RL algorithm: TRL `GRPOTrainer`
-- Parameter-efficient training: LoRA or QLoRA
+- Training format: LoRA
 
 
 ## Files
